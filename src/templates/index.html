@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Shorten Your URL{% endblock %}
+
+{% block content %}
+    <section class="hero">
+        <h1>Shorten Your Long URLs</h1>
+        <p>Create concise, custom short links and track their performance.</p>
+    </section>
+
+    <section class="url-shorten-form">
+        <h2>New Short Link</h2>
+        <form method="POST" action="{{ url_for('main.index') }}">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                {{ form.long_url.label }}
+                {{ form.long_url(class="form-control", required=true) }}
+                {% if form.long_url.errors %}
+                    <ul class="errors">
+                        {% for error in form.long_url.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.custom_code.label }}
+                {{ form.custom_code(class="form-control") }}
+                {% if form.custom_code.errors %}
+                    <ul class="errors">
+                        {% for error in form.custom_code.errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+            {{ form.submit(class="btn btn-primary") }}
+        </form>
+    </section>
+
+    {% if recent_urls %}
+    <section class="recent-links">
+        <h2>Your Recent Links</h2>
+        <div class="link-list">
+            {% for url_entry in recent_urls %}
+            <div class="link-item">
+                <p class="short-link-display">
+                    <a href="{{ url_for('main.redirect_to_long_url', short_code=url_entry.short_code) }}" target="_blank">
+                        {{ request.url_root | url_parse | attr('scheme') }}://{{ request.url_root | url_parse | attr('netloc') }}{{ url_for('main.redirect_to_long_url', short_code=url_entry.short_code) }}
+                    </a>
+                </p>
+                <p class="long-link-display">Original: <a href="{{ url_entry.long_url }}" target="_blank">{{ url_entry.long_url }}</a></p>
+                <p class="link-actions">
+                    <a href="{{ url_for('main.short_url_details', short_code=url_entry.short_code) }}" class="btn btn-secondary">Details</a>
+                    <a href="{{ url_for('main.analytics', short_code=url_entry.short_code) }}" class="btn btn-secondary">Analytics</a>
+                </p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+{% endblock %}

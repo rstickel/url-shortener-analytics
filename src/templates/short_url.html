@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Short URL Details{% endblock %}
+
+{% block content %}
+    <section class="url-details">
+        <h1>Short URL Details</h1>
+
+        <div class="detail-item">
+            <strong>Long URL:</strong> <a href="{{ short_url_entry.long_url }}" target="_blank">{{ short_url_entry.long_url }}</a>
+        </div>
+        <div class="detail-item">
+            <strong>Short URL:</strong> 
+            <span id="shortUrl">{{ short_link }}</span> 
+            <button class="btn btn-small" onclick="copyToClipboard('shortUrl')">Copy</button>
+        </div>
+        <div class="detail-item">
+            <strong>Custom Code:</strong> {{ short_url_entry.short_code }}
+        </div>
+        <div class="detail-item">
+            <strong>Created At:</strong> {{ short_url_entry.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+        </div>
+        <div class="detail-item">
+            <strong>Total Clicks:</strong> {{ short_url_entry.clicks | length }}
+        </div>
+
+        <div class="actions">
+            <a href="{{ url_for('main.analytics', short_code=short_url_entry.short_code) }}" class="btn btn-primary">View Analytics</a>
+            <a href="{{ url_for('main.index') }}" class="btn btn-secondary">Back to Home</a>
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+        function copyToClipboard(elementId) {
+            var copyText = document.getElementById(elementId);
+            var tempInput = document.createElement("input");
+            document.body.appendChild(tempInput);
+            tempInput.value = copyText.textContent || copyText.innerText;
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("Copied the short URL: " + tempInput.value);
+        }
+    </script>
+{% endblock %}

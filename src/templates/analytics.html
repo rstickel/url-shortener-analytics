@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics for {{ short_url_entry.short_code }}{% endblock %}
+
+{% block content %}
+    <section class="analytics-dashboard">
+        <h1>Analytics for `{{ short_url_entry.short_code }}`</h1>
+        <p class="long-link">Original URL: <a href="{{ short_url_entry.long_url }}" target="_blank">{{ short_url_entry.long_url }}</a></p>
+
+        <div class="stats-overview">
+            <h2>Total Clicks: {{ click_data.total_clicks }}</h2>
+        </div>
+
+        <div class="stats-section">
+            <h3>Clicks Over Time (Daily)</h3>
+            {% if click_data.clicks_by_day %}
+                <ul>
+                    {% for day, count in click_data.clicks_by_day %}
+                        <li>{{ day }}: {{ count }} clicks</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No click data available for this period.</p>
+            {% endif %}
+        </div>
+
+        <div class="stats-section">
+            <h3>Top Referrers</h3>
+            {% if click_data.top_referrers %}
+                <ul>
+                    {% for referrer, count in click_data.top_referrers %}
+                        <li>{{ referrer }}: {{ count }} clicks</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No referrer data available.</p>
+            {% endif %}
+        </div>
+
+        <div class="stats-section">
+            <h3>Top Browsers</h3>
+            {% if click_data.top_browsers %}
+                <ul>
+                    {% for browser, count in click_data.top_browsers %}
+                        <li>{{ browser }}: {{ count }} clicks</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No browser data available.</p>
+            {% endif %}
+        </div>
+
+        <div class="stats-section">
+            <h3>Top Operating Systems</h3>
+            {% if click_data.top_os %}
+                <ul>
+                    {% for os, count in click_data.top_os %}
+                        <li>{{ os }}: {{ count }} clicks</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No operating system data available.</p>
+            {% endif %}
+        </div>
+
+        <div class="stats-section">
+            <h3>Top Countries (Requires Geo-IP Integration)</h3>
+            {% if click_data.top_countries %}
+                <ul>
+                    {% for country, count in click_data.top_countries %}
+                        <li>{{ country }}: {{ count }} clicks</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No country data available. Integrate a Geo-IP service to enable this.</p>
+            {% endif %}
+        </div>
+
+        <div class="stats-section">
+            <h3>Top Cities (Requires Geo-IP Integration)</h3>
+            {% if click_data.top_cities %}
+                <ul>
+                    {% for city, count in click_data.top_cities %}
+                        <li>{{ city }}: {{ count }} clicks</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No city data available. Integrate a Geo-IP service to enable this.</p>
+            {% endif %}
+        </div>
+
+        <div class="actions">
+            <a href="{{ url_for('main.short_url_details', short_code=short_url_entry.short_code) }}" class="btn btn-secondary">Back to Details</a>
+            <a href="{{ url_for('main.index') }}" class="btn btn-secondary">Back to Home</a>
+        </div>
+    </section>
+{% endblock %}
